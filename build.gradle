@@ -3,7 +3,7 @@ buildscript {
         mavenCentral()
         maven {
             name = "forge"
-            url = "http://files.minecraftforge.net/maven"
+            url = "https://maven.minecraftforge.net/"
         }
         maven {
             name = "sonatype"
@@ -11,8 +11,15 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+        classpath ('com.anatawa12.forge:ForgeGradle:1.2-1.1.+') {
+            changing = true
+        }
     }
+}
+
+plugins {
+    id 'java-library'
+    id 'maven-publish'
 }
 
 apply plugin: 'forge'
@@ -21,7 +28,7 @@ sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
 version = "${projecte_version}"
-group= "java.moze_intel" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+group = "${projecte_group}"
 archivesBaseName = "ProjectE"
 
 minecraft {
@@ -35,32 +42,37 @@ minecraft {
 repositories {
     maven { //Waila Repo
         name "Mobius Repo"
-        url "http://mobiusstrip.eu/maven"
+        url "https://cursemaven.com"
     }
     maven { //NEI Repo
         name 'CB Repo'
         url "http://chickenbones.net/maven/"
+        allowInsecureProtocol = true
     }
     maven {
         name 'Chisel'
         url "http://maven.tterrag.com/"
+        allowInsecureProtocol = true
     }
-    ivy {
-        name "MineTweaker3"
-        artifactPattern "http://minetweaker3.powerofbytes.com/download/[module]-([classifier]-)[revision].[ext]"
+        maven {
+        name 'MineTweaker3'
+        url "https://maven.blamejared.com/"
+        allowInsecureProtocol = true
     }
 }
  
 dependencies {
-    testCompile group: 'junit', name: 'junit', version:'4.11'
+    testImplementation group: 'junit', name: 'junit', version:'4.11'
 
-    compile "com.cricketcraft.chisel:Chisel2:2.5.0.2:api"
+    implementation files("Chisel-CT2.5.0.1-api.jar")
 	
-    compile "codechicken:CodeChickenCore:1.7.10-1.0.4.29:dev"
-    compile "codechicken:CodeChickenLib:1.7.10-1.1.1.110:dev"
-    compile "codechicken:NotEnoughItems:1.7.10-1.0.4.83:dev"
+    implementation "codechicken:CodeChickenCore:1.7.10-1.0.4.29:dev"
+    implementation "codechicken:CodeChickenLib:1.7.10-1.1.1.110:dev"
+    implementation "codechicken:NotEnoughItems:1.7.10-1.0.4.83:dev"
 
-    compile name: 'MineTweaker3', version: 'Dev-1.7.10-3.0.9C', ext: 'jar'
+    implementation "MineTweaker3:MineTweaker3-MC1710-Main:1.7.10-3.0.11.18"
+    implementation "MineTweaker3:MineTweaker3-API:3.0.11.23"
+    
 }
 
 processResources
@@ -81,6 +93,7 @@ processResources
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
     }
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
 // Dev jar (deobfuscated)

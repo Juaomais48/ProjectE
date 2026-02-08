@@ -86,7 +86,6 @@ out/
 main/java/appeng/
 main/java/invtweaks/
 main/java/ic2/
-libs/
 
 
 #################
@@ -278,3 +277,4 @@ main/java/moze_intel/network/packets/AddEmcPKT.java
 main/java/moze_intel/utils/MozeLogger.java
 main/java/moze_intel/utils/PlayerBagInventory.java
 main/java/moze_intel/utils/PlayerKnowledge.java
+logs/
