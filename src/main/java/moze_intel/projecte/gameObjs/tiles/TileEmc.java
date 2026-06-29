@@ -19,7 +19,7 @@ public abstract class TileEmc extends TileEmcBase
 		setMaximumEMC(Constants.TILE_MAX_EMC);
 	}
 	
-	public TileEmc(int maxAmount)
+	public TileEmc(long maxAmount)
 	{
 		setMaximumEMC(maxAmount);
 	}

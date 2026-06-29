@@ -20,7 +20,7 @@ public class TransmutationProps implements IExtendedEntityProperties
 {
 	private final EntityPlayer player;
 
-	private double transmutationEmc;
+	private long transmutationEmc;
 	private List<ItemStack> knowledge = Lists.newArrayList();
 	private ItemStack[] inputLocks = new ItemStack[9];
 	public static final String PROP_NAME = "ProjectETransmutation";
@@ -50,14 +50,14 @@ public class TransmutationProps implements IExtendedEntityProperties
 		this.inputLocks = inputLocks;
 	}
 
-	protected double getTransmutationEmc()
+	protected long getTransmutationEmc()
 	{
 		return transmutationEmc;
 	}
 
-	protected void setTransmutationEmc(double transmutationEmc)
+	protected void setTransmutationEmc(long transmutationEmc)
 	{
-		this.transmutationEmc = transmutationEmc;
+		this.transmutationEmc = Math.max(0, transmutationEmc);
 	}
 
 	protected List<ItemStack> getKnowledge()
@@ -93,7 +93,7 @@ public class TransmutationProps implements IExtendedEntityProperties
 	protected NBTTagCompound saveForPacket()
 	{
 		NBTTagCompound compound = new NBTTagCompound();
-		compound.setDouble("transmutationEmc", transmutationEmc);
+		compound.setLong("transmutationEmc", transmutationEmc);
 
 		pruneStaleKnowledge();
 		NBTTagList knowledgeWrite = new NBTTagList();
@@ -111,7 +111,7 @@ public class TransmutationProps implements IExtendedEntityProperties
 
 	public void readFromPacket(NBTTagCompound compound)
 	{
-		transmutationEmc = compound.getDouble("transmutationEmc");
+		transmutationEmc = readTransmutationEmc(compound);
 
 		NBTTagList list = compound.getTagList("knowledge", Constants.NBT.TAG_COMPOUND);
 		knowledge.clear();
@@ -128,11 +128,34 @@ public class TransmutationProps implements IExtendedEntityProperties
 		inputLocks = ItemHelper.copyIndexedNBTToArray(list2, new ItemStack[9]);
 	}
 
+	static long readTransmutationEmc(NBTTagCompound compound)
+	{
+		if (compound.hasKey("transmutationEmc", Constants.NBT.TAG_LONG))
+		{
+			return Math.max(0, compound.getLong("transmutationEmc"));
+		}
+
+		if (compound.hasKey("transmutationEmc", Constants.NBT.TAG_DOUBLE))
+		{
+			double legacyEmc = compound.getDouble("transmutationEmc");
+			if (legacyEmc <= 0)
+			{
+				return 0;
+			}
+			if (legacyEmc >= Long.MAX_VALUE)
+			{
+				return Long.MAX_VALUE;
+			}
+			return (long) Math.ceil(legacyEmc);
+		}
+
+		return 0;
+	}
 	@Override
 	public void saveNBTData(NBTTagCompound compound)
 	{
 		NBTTagCompound properties = new NBTTagCompound();
-		properties.setDouble("transmutationEmc", transmutationEmc);
+		properties.setLong("transmutationEmc", transmutationEmc);
 
 		pruneStaleKnowledge();
 		NBTTagList knowledgeWrite = new NBTTagList();
@@ -153,7 +176,7 @@ public class TransmutationProps implements IExtendedEntityProperties
 	{
 		NBTTagCompound properties = compound.getCompoundTag(PROP_NAME);
 
-		transmutationEmc = properties.getDouble("transmutationEmc");
+		transmutationEmc = readTransmutationEmc(properties);
 
 		NBTTagList list = properties.getTagList("knowledge", Constants.NBT.TAG_COMPOUND);
 		for (int i = 0; i < list.tagCount(); i++)

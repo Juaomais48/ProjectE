@@ -33,7 +33,7 @@ public class CollectorMK1Tile extends TileEmc implements IInventory, ISidedInven
 	private boolean hasChargeableItem;
 	private boolean hasFuel;
 	public double storedFuelEmc;
-	public int displayEmc;
+	public long displayEmc;
 	public int displaySunLevel;
 	public double displayItemCharge;
 	private int numUsing;
@@ -56,7 +56,7 @@ public class CollectorMK1Tile extends TileEmc implements IInventory, ISidedInven
 		lockSlot = 10;
 	}
 	
-	public CollectorMK1Tile(int maxEmc, int emcGen, int upgradedSlot, int lockSlot)
+	public CollectorMK1Tile(long maxEmc, int emcGen, int upgradedSlot, int lockSlot)
 	{
 		super(maxEmc);
 		inventory = new ItemStack[lockSlot + 1];
@@ -101,7 +101,7 @@ public class CollectorMK1Tile extends TileEmc implements IInventory, ISidedInven
 		
 		updateEmc();
 		
-		displayEmc = (int) this.getStoredEmc();
+		displayEmc = (long) this.getStoredEmc();
 		displaySunLevel = getSunLevel();
 		displayItemCharge = getItemCharge();
 		
@@ -220,7 +220,7 @@ public class CollectorMK1Tile extends TileEmc implements IInventory, ISidedInven
 			double toSend = this.getStoredEmc() < emcGen ? this.getStoredEmc() : emcGen;
 			
 			double starEmc = ItemPE.getEmc(inventory[0]);
-			int maxStarEmc = EMCHelper.getKleinStarMaxEmc(inventory[0]);
+			long maxStarEmc = EMCHelper.getKleinStarMaxEmc(inventory[0]);
 			
 			if ((starEmc + toSend) > maxStarEmc)
 			{
@@ -239,7 +239,7 @@ public class CollectorMK1Tile extends TileEmc implements IInventory, ISidedInven
 
 			ItemStack result = inventory[lockSlot] == null ? FuelMapper.getFuelUpgrade(inventory[0]) : inventory[lockSlot].copy();
 			
-			int upgradeCost = EMCHelper.getEmcValue(result) - EMCHelper.getEmcValue(inventory[0]);
+			long upgradeCost = EMCHelper.getEmcValue(result) - EMCHelper.getEmcValue(inventory[0]);
 			
 			if (upgradeCost > 0 && this.getStoredEmc() >= upgradeCost)
 			{
@@ -339,7 +339,7 @@ public class CollectorMK1Tile extends TileEmc implements IInventory, ISidedInven
 			return 0;
 		}
 		
-		int reqEmc = 0;
+		long reqEmc = 0;
 		
 		if (inventory[lockSlot] != null)
 		{
@@ -369,7 +369,7 @@ public class CollectorMK1Tile extends TileEmc implements IInventory, ISidedInven
 			return i;
 		}
 		
-		return displayEmc * i / reqEmc;
+		return (int) (displayEmc * i / reqEmc);
 	}
 	
 	@Override

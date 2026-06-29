@@ -74,14 +74,14 @@ public interface ITransmutationProxy
      * @param playerUUID The Player to modify
      * @param emc The value to set
      */
-    void setEMC(UUID playerUUID, double emc);
+    void setEMC(UUID playerUUID, long emc);
 
     /**
      * Gets the player's personal transmutation emc
      * Can be called on both sides, only if the client player exists or the server is started
      * If called on the client side, playerUUID is ignored and the client player is used instead
      * @param playerUUID The Player to modify
-     * @return The emc, or NaN if player is not found
+     * @return The emc, or -1 if player is not found
      */
-    double getEMC(UUID playerUUID);
+    long getEMC(UUID playerUUID);
 }

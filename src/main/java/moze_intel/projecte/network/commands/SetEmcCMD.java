@@ -40,7 +40,7 @@ public class SetEmcCMD extends ProjectEBaseCMD
 
 		String name;
 		int meta;
-		int emc;
+		long emc;
 
 		if (params.length == 1)
 		{
@@ -54,7 +54,7 @@ public class SetEmcCMD extends ProjectEBaseCMD
 
 			name = Item.itemRegistry.getNameForObject(heldItem.getItem());
 			meta = heldItem.getItemDamage();
-			emc = MathUtils.parseInteger(params[0]);
+			emc = MathUtils.parseLong(params[0]);
 
 			if (emc < 0)
 			{
@@ -79,7 +79,7 @@ public class SetEmcCMD extends ProjectEBaseCMD
 						return;
 					}
 
-					emc = MathUtils.parseInteger(params[2]);
+					emc = MathUtils.parseLong(params[2]);
 
 					if (emc < 0)
 					{
@@ -89,7 +89,7 @@ public class SetEmcCMD extends ProjectEBaseCMD
 				}
 				else
 				{
-					emc = MathUtils.parseInteger(params[1]);
+					emc = MathUtils.parseLong(params[1]);
 
 					if (emc < 0)
 					{
@@ -100,7 +100,7 @@ public class SetEmcCMD extends ProjectEBaseCMD
 			}
 			else
 			{
-				emc = MathUtils.parseInteger(params[1]);
+				emc = MathUtils.parseLong(params[1]);
 
 				if (emc < 0)
 				{

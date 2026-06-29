@@ -11,7 +11,7 @@ import net.minecraft.tileentity.TileEntity;
 
 public class RelaySyncPKT implements IMessage
 {
-	private int displayEmc;
+	private long displayEmc;
 	private double displayKleinEmc;
 	private double displayRawEmc;
 	private int x;
@@ -20,7 +20,7 @@ public class RelaySyncPKT implements IMessage
 	
 	public RelaySyncPKT() {}
 	
-	public RelaySyncPKT(int displayEmc, double displayKleinEmc, double displayRawEmc, int x, int y, int z)
+	public RelaySyncPKT(long displayEmc, double displayKleinEmc, double displayRawEmc, int x, int y, int z)
 	{
 		this.displayEmc = displayEmc;
 		this.displayKleinEmc = displayKleinEmc;
@@ -33,7 +33,7 @@ public class RelaySyncPKT implements IMessage
 	@Override
 	public void fromBytes(ByteBuf buf) 
 	{
-		displayEmc = buf.readInt();
+		displayEmc = buf.readLong();
 		displayKleinEmc = buf.readDouble();
 		displayRawEmc = buf.readDouble();
 		x = buf.readInt();
@@ -44,7 +44,7 @@ public class RelaySyncPKT implements IMessage
 	@Override
 	public void toBytes(ByteBuf buf) 
 	{
-		buf.writeInt(displayEmc);
+		buf.writeLong(displayEmc);
 		buf.writeDouble(displayKleinEmc);
 		buf.writeDouble(displayRawEmc);
 		buf.writeInt(x);

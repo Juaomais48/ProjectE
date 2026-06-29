@@ -30,7 +30,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class TransmutationInventory implements IInventory
 {
-	public double emc;
+	public long emc;
 	private EntityPlayer player = null;
 	private static final int LOCK_INDEX = 8;
 	private static final int[] MATTER_INDEXES = new int[] {12, 11, 13, 10, 14, 21, 15, 20, 16, 19, 17, 18};
@@ -120,10 +120,10 @@ public class TransmutationInventory implements IInventory
 	
 	public void checkForUpdates()
 	{
-		int matterEmc = EMCHelper.getEmcValue(inventory[MATTER_INDEXES[0]]);
-		int fuelEmc = EMCHelper.getEmcValue(inventory[FUEL_INDEXES[0]]);
+		long matterEmc = EMCHelper.getEmcValue(inventory[MATTER_INDEXES[0]]);
+		long fuelEmc = EMCHelper.getEmcValue(inventory[FUEL_INDEXES[0]]);
 		
-		int maxEmc = matterEmc > fuelEmc ? matterEmc : fuelEmc;
+		long maxEmc = matterEmc > fuelEmc ? matterEmc : fuelEmc;
 		
 		if (maxEmc > emc)
 		{
@@ -158,7 +158,7 @@ public class TransmutationInventory implements IInventory
 		ItemSearchHelper searchHelper = ItemSearchHelper.create(filter);
 		if (inventory[LOCK_INDEX] != null)
 		{
-			int reqEmc = EMCHelper.getEmcValue(inventory[LOCK_INDEX]);
+			long reqEmc = EMCHelper.getEmcValue(inventory[LOCK_INDEX]);
 			
 			if (this.emc < reqEmc)
 			{
@@ -406,24 +406,38 @@ public class TransmutationInventory implements IInventory
 	@Override
 	public void markDirty() {}
 	
-	public void addEmc(double value)
+	public long getRemainingEmcCapacity()
 	{
-		emc += value;
-		
-		if (emc >= Constants.TILE_MAX_EMC || emc < 0)
+		return Constants.TILE_MAX_EMC - emc;
+	}
+
+	public boolean canAcceptEmc(long value)
+	{
+		return value >= 0 && value <= getRemainingEmcCapacity();
+	}
+
+	public long addEmc(long value)
+	{
+		if (value <= 0)
 		{
-			emc = Constants.TILE_MAX_EMC;
+			return 0;
 		}
+
+		long accepted = Math.min(value, getRemainingEmcCapacity());
+		emc += accepted;
+		return accepted;
 	}
 	
-	public void removeEmc(double value) 
+	public long removeEmc(long value)
 	{
-		emc -= value;
-		
-		if (emc < 0)
+		if (value <= 0)
 		{
-			emc = 0;
+			return 0;
 		}
+
+		long removed = Math.min(value, emc);
+		emc -= removed;
+		return removed;
 	}
 
 	public boolean hasMaxedEmc()

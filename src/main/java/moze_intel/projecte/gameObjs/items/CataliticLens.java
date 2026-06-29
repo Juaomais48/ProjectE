@@ -22,7 +22,7 @@ public class CataliticLens extends DestructionCatalyst implements IProjectileSho
 	public boolean shootProjectile(EntityPlayer player, ItemStack stack)
 	{
 		World world = player.worldObj;
-		int requiredEmc = Constants.EXPLOSIVE_LENS_COST[this.getCharge(stack)];
+		long requiredEmc = Constants.EXPLOSIVE_LENS_COST[this.getCharge(stack)];
 		
 		if (!consumeFuel(player, stack, requiredEmc, true))
 		{

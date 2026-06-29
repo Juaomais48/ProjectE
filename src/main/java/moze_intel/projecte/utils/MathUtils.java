@@ -27,6 +27,21 @@ public final class MathUtils
 		return value;
 	}
 
+	public static long parseLong(String string)
+	{
+		long value;
+
+		try
+		{
+			value = Long.parseLong(string);
+		}
+		catch (NumberFormatException e)
+		{
+			return -1;
+		}
+
+		return value;
+	}
 	public static int randomIntInRange(int min, int max)
 	{
 		Random rand = new Random();

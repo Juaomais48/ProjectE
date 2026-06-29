@@ -5,12 +5,13 @@ import moze_intel.projecte.emc.arithmetics.IValueArithmetic;
 import moze_intel.projecte.emc.collector.DumpToFileCollector;
 import moze_intel.projecte.api.event.EMCRemapEvent;
 import moze_intel.projecte.emc.collector.IExtendedMappingCollector;
-import moze_intel.projecte.emc.collector.IntToFractionCollector;
-import moze_intel.projecte.emc.generators.FractionToIntGenerator;
+import moze_intel.projecte.emc.collector.LongToFractionCollector;
+import moze_intel.projecte.emc.generators.FractionToLongGenerator;
 import moze_intel.projecte.emc.generators.IValueGenerator;
 import moze_intel.projecte.emc.mappers.APICustomConversionMapper;
 import moze_intel.projecte.emc.mappers.Chisel2Mapper;
-import moze_intel.projecte.emc.arithmetics.HiddenFractionArithmetic;
+import moze_intel.projecte.emc.arithmetics.LongFraction;
+import moze_intel.projecte.emc.arithmetics.LongFractionArithmetic;
 import moze_intel.projecte.emc.mappers.APICustomEMCMapper;
 import moze_intel.projecte.emc.mappers.CraftingMapper;
 import moze_intel.projecte.emc.mappers.CustomEMCMapper;
@@ -42,12 +43,12 @@ import java.util.Map;
 
 public final class EMCMapper 
 {
-	public static Map<SimpleStack, Integer> emc = new LinkedHashMap<>();
-	public static Map<NormalizedSimpleStack, Integer> graphMapperValues;
+	public static Map<SimpleStack, Long> emc = new LinkedHashMap<>();
+	public static Map<NormalizedSimpleStack, Long> graphMapperValues;
 
 	public static void map()
 	{
-		List<IEMCMapper<NormalizedSimpleStack, Integer>> emcMappers = Arrays.asList(
+		List<IEMCMapper<NormalizedSimpleStack, Long>> emcMappers = Arrays.asList(
 				new OreDictionaryMapper(),
 				new LazyMapper(),
 				new Chisel2Mapper(),
@@ -59,9 +60,9 @@ public final class EMCMapper
 				new SmeltingMapper(),
 				new APICustomConversionMapper()
 		);
-		SimpleGraphMapper<NormalizedSimpleStack, Fraction, IValueArithmetic<Fraction>> mapper = new SimpleGraphMapper(new HiddenFractionArithmetic());
-		IValueGenerator<NormalizedSimpleStack, Integer> valueGenerator = new FractionToIntGenerator(mapper);
-		IExtendedMappingCollector<NormalizedSimpleStack, Integer, IValueArithmetic<Fraction>> mappingCollector = new IntToFractionCollector(mapper);
+		SimpleGraphMapper<NormalizedSimpleStack, LongFraction, IValueArithmetic<LongFraction>> mapper = new SimpleGraphMapper(new LongFractionArithmetic());
+		IValueGenerator<NormalizedSimpleStack, Long> valueGenerator = new FractionToLongGenerator(mapper);
+		IExtendedMappingCollector<NormalizedSimpleStack, Long, IValueArithmetic<LongFraction>> mappingCollector = new LongToFractionCollector(mapper);
 
 		Configuration config = new Configuration(new File(PECore.CONFIG_DIR, "mapping.cfg"));
 		config.load();
@@ -88,7 +89,7 @@ public final class EMCMapper
 			));
 
 			PELogger.logInfo("Starting to collect Mappings...");
-			for (IEMCMapper<NormalizedSimpleStack, Integer> emcMapper : emcMappers)
+			for (IEMCMapper<NormalizedSimpleStack, Long> emcMapper : emcMappers)
 			{
 				try
 				{
@@ -133,7 +134,7 @@ public final class EMCMapper
 		}
 
 
-		for (Map.Entry<NormalizedSimpleStack, Integer> entry: graphMapperValues.entrySet()) {
+		for (Map.Entry<NormalizedSimpleStack, Long> entry: graphMapperValues.entrySet()) {
 			if (entry.getKey() instanceof NormalizedSimpleStack.NSSItem)
 			{
 				NormalizedSimpleStack.NSSItem normStackItem = (NormalizedSimpleStack.NSSItem)entry.getKey();
@@ -157,9 +158,9 @@ public final class EMCMapper
 	 * Remove all entrys from the map, that are not {@link moze_intel.projecte.emc.NormalizedSimpleStack.NSSItem}s, have a value < 0 or WILDCARD_VALUE as metadata.
 	 * @param map
 	 */
-	static void filterEMCMap(Map<NormalizedSimpleStack, Integer> map) {
-		for(Iterator<Map.Entry<NormalizedSimpleStack, Integer>> iter = graphMapperValues.entrySet().iterator(); iter.hasNext();) {
-			Map.Entry<NormalizedSimpleStack, Integer> entry = iter.next();
+	static void filterEMCMap(Map<NormalizedSimpleStack, Long> map) {
+		for(Iterator<Map.Entry<NormalizedSimpleStack, Long>> iter = graphMapperValues.entrySet().iterator(); iter.hasNext();) {
+			Map.Entry<NormalizedSimpleStack, Long> entry = iter.next();
 			NormalizedSimpleStack normStack = entry.getKey();
 			if (normStack instanceof NormalizedSimpleStack.NSSItem && entry.getValue() > 0) {
 				NormalizedSimpleStack.NSSItem normStackItem = (NormalizedSimpleStack.NSSItem)normStack;
@@ -179,7 +180,7 @@ public final class EMCMapper
 		return emc.containsKey(copy);
 	}
 
-	public static int getEmcValue(SimpleStack stack)
+	public static long getEmcValue(SimpleStack stack)
 	{
 		SimpleStack copy = stack.copy();
 		copy.qnty = 1;

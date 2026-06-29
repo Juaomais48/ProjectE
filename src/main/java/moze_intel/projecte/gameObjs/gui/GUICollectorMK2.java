@@ -26,11 +26,11 @@ public class GUICollectorMK2 extends GuiContainer
 	@Override
 	protected void drawGuiContainerForegroundLayer(int var1, int var2)
 	{
-		this.fontRendererObj.drawString(Integer.toString(tile.displayEmc), 75, 32, 4210752);
+		this.fontRendererObj.drawString(Constants.formatEmc(tile.displayEmc), 75, 32, 4210752);
 		
 		double kleinCharge = tile.displayItemCharge;
 		if (kleinCharge != -1)
-			this.fontRendererObj.drawString(Constants.EMC_FORMATTER.format(kleinCharge), 75, 44, 4210752);
+			this.fontRendererObj.drawString(Constants.formatEmc(kleinCharge), 75, 44, 4210752);
 	}
 
 	@Override

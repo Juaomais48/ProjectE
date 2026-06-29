@@ -20,7 +20,7 @@ public class SyncEmcPKT implements IMessage
 
 	public SyncEmcPKT() {}
 
-	public SyncEmcPKT(int packetNum, List<Integer[]> arrayList)
+	public SyncEmcPKT(int packetNum, List<long[]> arrayList)
 	{
 		this.packetNum = packetNum;
 		data = arrayList.toArray();
@@ -35,12 +35,13 @@ public class SyncEmcPKT implements IMessage
 
 		for (int i = 0; i < size; i++)
 		{
-			Integer[] array = new Integer[4];
+			long[] array = new long[4];
 
-			for (int j = 0; j < 4; j++)
+			for (int j = 0; j < 3; j++)
 			{
 				array[j] = buf.readInt();
 			}
+			array[3] = buf.readLong();
 
 			data[i] = array;
 		}
@@ -54,12 +55,13 @@ public class SyncEmcPKT implements IMessage
 
 		for (Object obj : data)
 		{
-			Integer[] array = (Integer[]) obj;
+			long[] array = (long[]) obj;
 
-			for (int i = 0; i < 4; i++)
+			for (int i = 0; i < 3; i++)
 			{
-				buf.writeInt(array[i]);
+				buf.writeInt((int) array[i]);
 			}
+			buf.writeLong(array[3]);
 		}
 	}
 
@@ -78,9 +80,9 @@ public class SyncEmcPKT implements IMessage
 
 			for (Object obj : pkt.data)
 			{
-				Integer[] array = (Integer[]) obj;
+				long[] array = (long[]) obj;
 
-				SimpleStack stack = new SimpleStack(array[0], array[1], array[2]);
+				SimpleStack stack = new SimpleStack((int) array[0], (int) array[1], (int) array[2]);
 
 				if (stack.isValid())
 				{

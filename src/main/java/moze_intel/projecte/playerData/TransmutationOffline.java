@@ -23,7 +23,7 @@ import java.util.UUID;
 public class TransmutationOffline
 {
     private static Map<UUID, List<ItemStack>> cachedKnowledge = Maps.newHashMap();
-    private static Map<UUID, Double> cachedEmc = Maps.newHashMap();
+    private static Map<UUID, Long> cachedEmc = Maps.newHashMap();
     private static Map<UUID, Boolean> cachedFullKnowledge = Maps.newHashMap();
 
     public static void cleanAll()
@@ -65,13 +65,13 @@ public class TransmutationOffline
         return false;
     }
 
-    public static double getEmc(UUID playerUUID)
+    public static long getEmc(UUID playerUUID)
     {
         if (!cachedEmc.containsKey(playerUUID))
         {
             cacheOfflineData(playerUUID);
         }
-        return cachedEmc.get(playerUUID) == null ? Double.NaN : cachedEmc.get(playerUUID);
+        return cachedEmc.get(playerUUID) == null ? -1 : cachedEmc.get(playerUUID);
     }
 
     private static void cacheOfflineData(UUID playerUUID) {
@@ -83,7 +83,7 @@ public class TransmutationOffline
             if (player.exists() && player.isFile()) {
                 try {
                     NBTTagCompound props = CompressedStreamTools.readCompressed(new FileInputStream(player)).getCompoundTag(TransmutationProps.PROP_NAME);
-                    cachedEmc.put(playerUUID, props.getDouble("transmutationEmc"));
+                    cachedEmc.put(playerUUID, TransmutationProps.readTransmutationEmc(props));
                     cachedFullKnowledge.put(playerUUID, props.getBoolean("tome"));
 
                     List<ItemStack> knowledge = Lists.newArrayList();

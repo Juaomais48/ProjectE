@@ -1,6 +1,7 @@
 package moze_intel.projecte.gameObjs.gui;
 
 import moze_intel.projecte.PECore;
+import moze_intel.projecte.utils.Constants;
 import moze_intel.projecte.gameObjs.container.RelayMK1Container;
 import moze_intel.projecte.gameObjs.tiles.RelayMK1Tile;
 import net.minecraft.client.Minecraft;
@@ -27,7 +28,7 @@ public class GUIRelayMK1 extends GuiContainer
 	protected void drawGuiContainerForegroundLayer(int var1, int var2)
 	{
 		this.fontRendererObj.drawString(StatCollector.translateToLocal("pe.relay.mk1"), 10, 6, 4210752);
-		this.fontRendererObj.drawString(Integer.toString(tile.displayEmc), 88, 24, 4210752);
+		this.fontRendererObj.drawString(Constants.formatEmc(tile.displayEmc), 88, 24, 4210752);
 	}
 
 	@Override

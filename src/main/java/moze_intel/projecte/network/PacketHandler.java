@@ -67,10 +67,11 @@ public final class PacketHandler
 
 	public static void sendFragmentedEmcPacket(EntityPlayerMP player)
 	{
-		ArrayList<Integer[]> list = Lists.newArrayList();
-		int counter = 0;
+		ArrayList<long[]> list = Lists.newArrayList();
+		PacketHandler.sendTo(new SyncEmcPKT(0, list), player);
+		int counter = 1;
 
-		for (Map.Entry<SimpleStack, Integer> entry : Maps.newLinkedHashMap(EMCMapper.emc).entrySet()) // Copy constructor to prevent race condition CME in SP
+		for (Map.Entry<SimpleStack, Long> entry : Maps.newLinkedHashMap(EMCMapper.emc).entrySet()) // Copy constructor to prevent race condition CME in SP
 		{
 			SimpleStack stack = entry.getKey();
 
@@ -79,7 +80,7 @@ public final class PacketHandler
 				continue;
 			}
 
-			Integer[] data = new Integer[] {stack.id, stack.qnty, stack.damage, entry.getValue()};
+			long[] data = new long[] {stack.id, stack.qnty, stack.damage, entry.getValue()};
 			list.add(data);
 
 			if (list.size() >= MAX_PKT_SIZE)
@@ -90,12 +91,9 @@ public final class PacketHandler
 			}
 		}
 
-		if (list.size() > 0)
-		{
-			PacketHandler.sendTo(new SyncEmcPKT(-1, list), player);
-			list.clear();
-			counter++;
-		}
+		PacketHandler.sendTo(new SyncEmcPKT(-1, list), player);
+		list.clear();
+		counter++;
 
 		PELogger.logInfo("Sent EMC data packets to: " + player.getCommandSenderName());
 		PELogger.logDebug("Total packets: " + counter);
@@ -103,10 +101,11 @@ public final class PacketHandler
 
 	public static void sendFragmentedEmcPacketToAll()
 	{
-		ArrayList<Integer[]> list = Lists.newArrayList();
-		int counter = 0;
+		ArrayList<long[]> list = Lists.newArrayList();
+		PacketHandler.sendToAll(new SyncEmcPKT(0, list));
+		int counter = 1;
 
-		for (Map.Entry<SimpleStack, Integer> entry : Maps.newLinkedHashMap(EMCMapper.emc).entrySet()) // Copy constructor to prevent race condition CME in SP
+		for (Map.Entry<SimpleStack, Long> entry : Maps.newLinkedHashMap(EMCMapper.emc).entrySet()) // Copy constructor to prevent race condition CME in SP
 		{
 			SimpleStack stack = entry.getKey();
 
@@ -115,7 +114,7 @@ public final class PacketHandler
 				continue;
 			}
 
-			Integer[] data = new Integer[] {stack.id, stack.qnty, stack.damage, entry.getValue()};
+			long[] data = new long[] {stack.id, stack.qnty, stack.damage, entry.getValue()};
 			list.add(data);
 
 			if (list.size() >= MAX_PKT_SIZE)
@@ -126,12 +125,9 @@ public final class PacketHandler
 			}
 		}
 
-		if (list.size() > 0)
-		{
-			PacketHandler.sendToAll(new SyncEmcPKT(-1, list));
-			list.clear();
-			counter++;
-		}
+		PacketHandler.sendToAll(new SyncEmcPKT(-1, list));
+		list.clear();
+		counter++;
 
 		PELogger.logInfo("Sent EMC data packets to all players.");
 		PELogger.logDebug("Total packets per player: " + counter);

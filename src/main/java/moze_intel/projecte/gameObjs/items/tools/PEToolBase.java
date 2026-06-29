@@ -120,7 +120,7 @@ public abstract class PEToolBase extends ItemMode
 	/**
 	 * Clears the given OD name in an AOE. Charge affects the AOE. Optional per-block EMC cost.
 	 */
-	protected void clearOdAOE(World world, ItemStack stack, EntityPlayer player, String odName, int emcCost)
+	protected void clearOdAOE(World world, ItemStack stack, EntityPlayer player, String odName, long emcCost)
 	{
 		byte charge = getCharge(stack);
 		if (charge == 0 || world.isRemote || ProjectEConfig.disableAllRadiusMining)
@@ -184,7 +184,7 @@ public abstract class PEToolBase extends ItemMode
 	/**
 	 * Tills in an AOE. Charge affects the AOE. Optional per-block EMC cost.
 	 */
-	protected void tillAOE(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int meta, int emcCost)
+	protected void tillAOE(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int meta, long emcCost)
 	{
 		byte charge = this.getCharge(stack);
 		boolean hasAction = false;
@@ -355,7 +355,7 @@ public abstract class PEToolBase extends ItemMode
 	/**
 	 * Carves in an AOE. Charge affects the breadth and/or depth of the AOE. Optional per-block EMC cost.
 	 */
-	protected void digAOE(ItemStack stack, World world, EntityPlayer player, boolean affectDepth, int emcCost)
+	protected void digAOE(ItemStack stack, World world, EntityPlayer player, boolean affectDepth, long emcCost)
 	{
 		if (world.isRemote || this.getCharge(stack) == 0 || ProjectEConfig.disableAllRadiusMining)
 		{
@@ -425,7 +425,7 @@ public abstract class PEToolBase extends ItemMode
 	/**
 	 * Attacks in an AOE. Charge affects AOE, not damage (intentional). Optional per-entity EMC cost.
 	 */
-	protected void attackAOE(ItemStack stack, EntityPlayer player, boolean slayAll, float damage, int emcCost)
+	protected void attackAOE(ItemStack stack, EntityPlayer player, boolean slayAll, float damage, long emcCost)
 	{
 		if (player.worldObj.isRemote)
 		{
@@ -496,7 +496,7 @@ public abstract class PEToolBase extends ItemMode
 	/**
 	 * Shears entities in an AOE. Charge affects AOE. Optional per-entity EMC cost.
 	 */
-	protected void shearEntityAOE(ItemStack stack, EntityPlayer player, int emcCost)
+	protected void shearEntityAOE(ItemStack stack, EntityPlayer player, long emcCost)
 	{
 		World world = player.worldObj;
 		if (!world.isRemote)

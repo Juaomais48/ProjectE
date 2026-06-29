@@ -11,6 +11,7 @@ import moze_intel.projecte.playerData.AlchemicalBags;
 import moze_intel.projecte.playerData.Transmutation;
 import moze_intel.projecte.playerData.TransmutationOffline;
 import moze_intel.projecte.playerData.TransmutationProps;
+import moze_intel.projecte.playerData.TransmutationTeamData;
 import moze_intel.projecte.utils.ChatHelper;
 import moze_intel.projecte.utils.ItemHelper;
 import moze_intel.projecte.utils.PELogger;
@@ -60,6 +61,7 @@ public class PlayerEvents
 		if (!event.entity.worldObj.isRemote && event.entity instanceof EntityPlayerMP)
 		{
 			EntityPlayerMP player = ((EntityPlayerMP) event.entity);
+			TransmutationTeamData.get(player.worldObj).updatePlayerName(player);
 			Transmutation.sync(player);
 			AlchemicalBags.syncFull(player);
 		}

@@ -1,6 +1,7 @@
 package moze_intel.projecte.gameObjs.gui;
 
 import moze_intel.projecte.PECore;
+import moze_intel.projecte.utils.Constants;
 import moze_intel.projecte.gameObjs.container.CondenserMK2Container;
 import moze_intel.projecte.gameObjs.tiles.CondenserMK2Tile;
 import net.minecraft.client.Minecraft;
@@ -40,7 +41,7 @@ public class GUICondenserMK2 extends GuiContainer
 	@Override
 	protected void drawGuiContainerForegroundLayer(int var1, int var2)
 	{
-		int toDisplay = tile.displayEmc > tile.requiredEmc ? tile.requiredEmc : tile.displayEmc;
-		this.fontRendererObj.drawString(Integer.toString(toDisplay), 140, 10, 4210752);
+		long toDisplay = tile.displayEmc > tile.requiredEmc ? tile.requiredEmc : tile.displayEmc;
+		this.fontRendererObj.drawString(Constants.formatEmc(toDisplay), 140, 10, 4210752);
 	}
 }

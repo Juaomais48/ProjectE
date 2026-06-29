@@ -9,6 +9,7 @@ import moze_intel.projecte.PECore;
 import moze_intel.projecte.api.proxy.ITransmutationProxy;
 import moze_intel.projecte.playerData.Transmutation;
 import moze_intel.projecte.playerData.TransmutationOffline;
+import moze_intel.projecte.playerData.TransmutationTeamData;
 import moze_intel.projecte.utils.MetaBlock;
 import moze_intel.projecte.utils.WorldTransmutations;
 import net.minecraft.block.Block;
@@ -63,6 +64,11 @@ public class TransmutationProxyImpl implements ITransmutationProxy
             }
             else
             {
+                TransmutationTeamData teamData = getTeamData();
+                if (teamData.hasTeam(playerUUID))
+                {
+                    return teamData.hasKnowledgeForStack(playerUUID, stack);
+                }
                 return TransmutationOffline.hasKnowledgeForStack(stack, playerUUID);
             }
         }
@@ -87,6 +93,12 @@ public class TransmutationProxyImpl implements ITransmutationProxy
             }
             else
             {
+                TransmutationTeamData teamData = getTeamData();
+                List<ItemStack> teamKnowledge = teamData.getKnowledge(playerUUID);
+                if (teamKnowledge != null)
+                {
+                    return teamKnowledge;
+                }
                 return TransmutationOffline.getKnowledge(playerUUID);
             }
         }
@@ -129,7 +141,7 @@ public class TransmutationProxyImpl implements ITransmutationProxy
     }
 
     @Override
-    public void setEMC(UUID playerUUID, double emc)
+    public void setEMC(UUID playerUUID, long emc)
     {
         Preconditions.checkNotNull(playerUUID);
         Preconditions.checkState(FMLCommonHandler.instance().getEffectiveSide().isServer(), "Cannot modify EMC clientside!");
@@ -143,7 +155,7 @@ public class TransmutationProxyImpl implements ITransmutationProxy
     }
 
     @Override
-    public double getEMC(UUID playerUUID)
+    public long getEMC(UUID playerUUID)
     {
         if (FMLCommonHandler.instance().getEffectiveSide() == Side.CLIENT)
         {
@@ -160,11 +172,19 @@ public class TransmutationProxyImpl implements ITransmutationProxy
             }
             else
             {
+                TransmutationTeamData teamData = getTeamData();
+                if (teamData.hasTeam(playerUUID))
+                {
+                    return teamData.getEmc(playerUUID);
+                }
                 return TransmutationOffline.getEmc(playerUUID);
             }
         }
     }
-
+    private TransmutationTeamData getTeamData()
+    {
+        return TransmutationTeamData.get(MinecraftServer.getServer().worldServerForDimension(0));
+    }
     @SuppressWarnings("unchecked")
     private EntityPlayer findOnlinePlayer(UUID playerUUID)
     {

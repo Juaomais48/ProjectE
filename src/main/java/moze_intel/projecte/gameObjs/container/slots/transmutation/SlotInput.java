@@ -36,17 +36,13 @@ public class SlotInput extends Slot
 		if (stack.getItem() instanceof IItemEmc)
 		{
 			IItemEmc itemEmc = ((IItemEmc) stack.getItem());
-			double remainingEmc = itemEmc.getMaximumEmc(stack) - (int) Math.ceil(itemEmc.getStoredEmc(stack));
+			long remainingEmc = (long) Math.floor(Math.max(0, itemEmc.getMaximumEmc(stack) - itemEmc.getStoredEmc(stack)));
+			long toTransfer = Math.min(inv.emc, remainingEmc);
 			
-			if (inv.emc >= remainingEmc)
+			if (toTransfer > 0)
 			{
-				itemEmc.addEmc(stack, remainingEmc);
-				inv.removeEmc(remainingEmc);
-			}
-			else
-			{
-				itemEmc.addEmc(stack, inv.emc);
-				inv.emc = 0;
+				itemEmc.addEmc(stack, toTransfer);
+				inv.removeEmc(toTransfer);
 			}
 		}
 		

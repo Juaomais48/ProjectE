@@ -12,7 +12,7 @@ import java.util.Locale;
 
 public class ProjectECMD extends ProjectEBaseCMD
 {
-	private static final List<String> commands = Lists.newArrayList("changelog", "clearKnowledge", "setEMC", "reloadEMC", "removeEMC", "resetEMC");
+	private static final List<String> commands = Lists.newArrayList("changelog", "clearKnowledge", "setEMC", "reloadEMC", "removeEMC", "resetEMC", "team");
 
 	ChangelogCMD changelogcmd = new ChangelogCMD();
 	ReloadEmcCMD reloademccmd = new ReloadEmcCMD();
@@ -20,6 +20,7 @@ public class ProjectECMD extends ProjectEBaseCMD
 	RemoveEmcCMD removeemccmd = new RemoveEmcCMD();
 	ResetEmcCMD resetemccmd = new ResetEmcCMD();
 	ClearKnowledgeCMD clearknowledgecmd = new ClearKnowledgeCMD();
+	TeamCMD teamcmd = new TeamCMD();
 
 	@Override
 	public String getCommandName() 
@@ -122,6 +123,10 @@ public class ProjectECMD extends ProjectEBaseCMD
 			{
 				sendError(sender, new ChatComponentTranslation("commands.generic.permission"));
 			}
+		}
+		else if ("team".equals(subName))
+		{
+			teamcmd.processCommand(sender, relayparams);
 		}
 		else if ("changelog".equals(subName))
 		{
